@@ -39,8 +39,8 @@ class Raycaster:
         return pos % 1
 
     def raycast(self, pos, direction):
-        sc_x = math.sqrt(1 + (direction[1] / direction[0]) ** 2) if direction[0] else direction[1]
-        sc_y = math.sqrt(1 + (direction[0] / direction[1]) ** 2) if direction[1] else direction[0]
+        sc_x = math.sqrt(1 + (direction[1] / direction[0]) ** 2) if direction[0] else 1
+        sc_y = math.sqrt(1 + (direction[0] / direction[1]) ** 2) if direction[1] else 1
 
         intersection = pos
         length = 0

@@ -3,12 +3,13 @@ import math
 
 
 class Player:
-    def __init__(self, pos, move_speed, angle_speed):
+    def __init__(self, pos, move_speed, angle_speed, map):
         self.pos = pos
         self.angle = 0
 
         self.move_speed = move_speed
         self.angle_speed = angle_speed
+        self.map = map
 
     @property
     def keys(self):
@@ -20,6 +21,13 @@ class Player:
     def get_right_direction(self):
         right = self.angle + math.pi / 2
         return math.cos(right), math.sin(right)
+
+    def sign(self, x):
+        if x > 0:
+            return 1
+        if x < 0:
+            return -1
+        return 0
 
     def move(self, dt):
         right_axis = self.keys[pygame.K_d] - self.keys[pygame.K_a]
@@ -38,6 +46,22 @@ class Player:
 
         x = self.pos[0] + vel[0]
         y = self.pos[1] + vel[1]
+
+        if (math.floor(x), math.floor(y)) in self.map:
+            if (math.floor(self.pos[0]), math.floor(y)) in self.map:
+                y = self.pos[1]
+            if (math.floor(x), math.floor(self.pos[1])) in self.map:
+                x = self.pos[0]
+
+        current = (math.floor(self.pos[0]), math.floor(self.pos[1]))
+        next = (math.floor(x), math.floor(y))
+
+        if next not in self.map:
+            if current[0] != next[0] and current[1] != next[1]:
+                if (current[0] + self.sign(next[0] - current[0]), current[1]) in self.map:
+                    if (current[0], current[1] + self.sign(next[1] - current[1])) in self.map:
+                        return
+
         self.pos = (x, y)
 
     def rotate(self, dt):
