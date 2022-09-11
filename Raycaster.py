@@ -30,16 +30,17 @@ class Raycaster:
         return 0
 
     def start_length(self, pos, dir):
-        return (dir > 0) - pos % 1
+        return abs((dir > 0) - pos % 1)
 
     def raycast(self, pos, direction):
         start_x = self.start_length(pos[0], direction[0])
         start_y = self.start_length(pos[1], direction[1])
+        print(start_x)
 
-        sc_x = math.sqrt(1 + (direction[0] / direction[1]) ** 2 if direction[1] else 0)
-        sc_y = math.sqrt(1 + (direction[1] / direction[0]) ** 2 if direction[0] else 0)
+        sc_x = math.sqrt(1 + (direction[1] / direction[0]) ** 2 if direction[0] else 0)
+        sc_y = math.sqrt(1 + (direction[0] / direction[1]) ** 2 if direction[1] else 0)
 
-        return min(sc_x, sc_y)
+        return min(sc_x * start_x, sc_y * start_y)
 
     def draw_raycast(self, win):
         angle_incr = self.fov / self.resolution
@@ -49,7 +50,7 @@ class Raycaster:
             angle = start + angle_incr * i
             x = win.get_width() / 2
             y = win.get_height() / 2
-            mag = self.raycast(self.player.pos, (math.cos(angle), math.sin(angle))) * 75 / 2
+            mag = self.raycast(self.player.pos, (math.cos(angle), math.sin(angle))) * 75
             pygame.draw.line(win, (0, 255, 0), (x, y), (x + math.cos(angle) * mag, y + math.sin(angle) * mag))
 
     def draw(self, win):
