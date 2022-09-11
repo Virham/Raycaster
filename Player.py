@@ -54,5 +54,5 @@ class Player:
         width = win.get_width() / 2
         height = win.get_height() / 2
 
-        pygame.draw.circle(win, (255, 0, 0), (width, height), 10)
+        pygame.draw.circle(win, (255, 0, 0), (width, height), 5)
         pygame.draw.line(win, (0, 255, 0), (width, height), (width + dir[0] * 10, height + dir[1] * 10))
