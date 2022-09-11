@@ -19,6 +19,7 @@ class Raycaster:
             angle = start + angle_incr * i
             x = math.cos(angle)
             y = math.sin(angle)
+            print(self.player.pos)
             self.raycast(self.player.pos, (x * self.render_distance, y * self.render_distance))
 
     def sign(self, x):
@@ -28,17 +29,17 @@ class Raycaster:
             return -1
         return 0
 
+    def start_length(self, pos, dir):
+        return (dir > 0) - pos % 1
+
     def raycast(self, pos, direction):
-        u = abs(math.atan(direction[0] / direction[1]))
-        x = (pos[0] * -self.sign(direction[0])) % 1 if pos[0] % 1 else self.sign(direction[0])
-        y = (pos[1] * -self.sign(direction[1])) % 1 if pos[1] % 1 else self.sign(direction[1])
+        start_x = self.start_length(pos[0], direction[0])
+        start_y = self.start_length(pos[1], direction[1])
 
-        x_mag = x * math.cos(u)
-        y_mag = y * math.sin(u)
+        sc_x = math.sqrt(1 + (direction[0] / direction[1]) ** 2 if direction[1] else 0)
+        sc_y = math.sqrt(1 + (direction[1] / direction[0]) ** 2 if direction[0] else 0)
 
-        mag = min(x_mag, y_mag)
-
-        return abs(mag)
+        return min(sc_x, sc_y)
 
     def draw_raycast(self, win):
         angle_incr = self.fov / self.resolution
@@ -48,15 +49,15 @@ class Raycaster:
             angle = start + angle_incr * i
             x = win.get_width() / 2
             y = win.get_height() / 2
-            mag = self.raycast((x / 75, y / 75), (math.cos(angle), math.sin(angle))) * 200
+            mag = self.raycast(self.player.pos, (math.cos(angle), math.sin(angle))) * 75 / 2
             pygame.draw.line(win, (0, 255, 0), (x, y), (x + math.cos(angle) * mag, y + math.sin(angle) * mag))
 
     def draw(self, win):
         win.fill(255)
         res = 75
 
-        off_x = self.player.pos[0] - win.get_width() / 2
-        off_y = self.player.pos[1] - win.get_height() / 2
+        off_x = self.player.pos[0] * res - win.get_width() / 2
+        off_y = self.player.pos[1] * res - win.get_height() / 2
 
         for i in self.map:
             pygame.draw.rect(win, (0, 0, 0), (i[0] * res - off_x, i[1] * res - off_y, res, res))
