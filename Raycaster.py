@@ -100,7 +100,11 @@ class Raycaster:
 
         for i, v in enumerate(res):
             if v[1]:
+                normalized = v[0] / self.render_distance
                 w = win.get_width() / self.resolution
                 x = w * i
-                color = (1 - v[0] / self.render_distance) * 255
-                pygame.draw.rect(win, (color, color, color), (x, 0, w, win.get_height()))
+                h = (1 - normalized) * win.get_height()
+                y = (win.get_height() - h) / 2
+
+                color = (1 - normalized) * 255
+                pygame.draw.rect(win, (color, color, color), (x, y, w, h))
