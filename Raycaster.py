@@ -57,6 +57,7 @@ class Raycaster:
                 intersection = (intersection[0] + y * sc_y * direction[0], round(intersection[1] + y * self.sign(direction[1])))
                 length += y * sc_y
                 block = (block[0], block[1] + self.sign(direction[1]))
+
             if block in self.map:
                 return length, intersection
 
@@ -87,3 +88,24 @@ class Raycaster:
 
         self.player.draw(win)
         self.draw_raycast(win)
+
+    def draw_persepctive(self, win):
+        win.fill((0, 0, 0))
+
+        angle_incr = self.fov / self.resolution
+        start = self.player.angle - self.fov / 2
+
+        for i in range(self.resolution):
+            angle = start + angle_incr * i
+            x = math.cos(angle)
+            y = math.sin(angle)
+            length, hit_point = self.raycast(self.player.pos, (x * self.render_distance, y * self.render_distance))
+
+            if hit_point:
+                normalized = self.render_distance / length
+                x = win.get_width() / self.resolution * i
+                y = win.get_height() / 2 - normalized * 50
+                w = win.get_width() / self.resolution
+                h = normalized * 100
+
+                pygame.draw.rect(win, (0, 0, 255), (x, y, w, h))

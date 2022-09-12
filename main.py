@@ -13,10 +13,10 @@ class Main:
         self.height = 720
         self.win = pygame.display.set_mode((self.width, self.height))
 
-        self.map = self.generate_map(10, 10)
-        self.player = Player((0, 0), 3, 4, self.map)
+        self.map = self.generate_map(100, 100 )
+        self.player = Player((-3.2, 2.1), 3, 4, self.map)
 
-        self.racaster = Raycaster(self.map, self.player, 20, 100, 10)
+        self.racaster = Raycaster(self.map, self.player, 200, 100, 6)
 
         self.time = time.time()
 
@@ -25,15 +25,13 @@ class Main:
 
         for i in range(width):
             for j in range(height):
-                if random.randint(0, 3) == 0:
+                if random.randint(0, 6) == 0:
                     map.append((i, j))
-
-        print(map)
 
         return map
 
     def draw(self):
-        self.racaster.draw(self.win)
+        self.racaster.draw_persepctive(self.win)
 
         pygame.display.update()
 
