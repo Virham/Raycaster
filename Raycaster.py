@@ -16,13 +16,15 @@ class Raycaster:
     def cast_rays(self):
         angle_incr = self.fov / self.resolution
         start = self.player.angle - self.fov / 2
+        results = [None] * self.resolution
 
         for i in range(self.resolution):
             angle = start + angle_incr * i
             x = math.cos(angle)
             y = math.sin(angle)
-            print(self.player.pos)
-            self.raycast(self.player.pos, (x * self.render_distance, y * self.render_distance))
+            results[i] = self.raycast(self.player.pos, (x, y))
+
+        return results
 
     def sign(self, x):
         if x > 0:
@@ -58,6 +60,9 @@ class Raycaster:
                 length += y * sc_y
                 block = (block[0], block[1] + self.sign(direction[1]))
 
+            if length > self.render_distance:
+                return length, False
+
             if block in self.map:
                 return length, intersection
 
@@ -91,21 +96,11 @@ class Raycaster:
 
     def draw_persepctive(self, win):
         win.fill((0, 0, 0))
+        res = self.cast_rays()
 
-        angle_incr = self.fov / self.resolution
-        start = self.player.angle - self.fov / 2
-
-        for i in range(self.resolution):
-            angle = start + angle_incr * i
-            x = math.cos(angle)
-            y = math.sin(angle)
-            length, hit_point = self.raycast(self.player.pos, (x * self.render_distance, y * self.render_distance))
-
-            if hit_point:
-                normalized = self.render_distance / length
-                x = win.get_width() / self.resolution * i
-                y = win.get_height() / 2 - normalized * 50
+        for i, v in enumerate(res):
+            if v[1]:
                 w = win.get_width() / self.resolution
-                h = normalized * 100
-
-                pygame.draw.rect(win, (0, 0, 255), (x, y, w, h))
+                x = w * i
+                color = (1 - v[0] / self.render_distance) * 255
+                pygame.draw.rect(win, (color, color, color), (x, 0, w, win.get_height()))

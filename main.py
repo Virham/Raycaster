@@ -16,7 +16,7 @@ class Main:
         self.map = self.generate_map(100, 100 )
         self.player = Player((-3.2, 2.1), 3, 4, self.map)
 
-        self.racaster = Raycaster(self.map, self.player, 200, 100, 6)
+        self.racaster = Raycaster(self.map, self.player, 60, 100, 10)
 
         self.time = time.time()
 
@@ -25,7 +25,7 @@ class Main:
 
         for i in range(width):
             for j in range(height):
-                if random.randint(0, 6) == 0:
+                if random.randint(0, 3 ) == 0:
                     map.append((i, j))
 
         return map
