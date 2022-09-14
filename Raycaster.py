@@ -64,7 +64,7 @@ class Raycaster:
                 return length, False
 
             if block in self.map:
-                better_len = length * math.cos(self.player.angle - angle )
+                better_len = length * math.cos(self.player.angle - angle)
                 return better_len, intersection
 
         return length, False

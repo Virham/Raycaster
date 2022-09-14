@@ -9,7 +9,7 @@ pygame.init()
 
 class Main:
     def __init__(self):
-        self.width = 1280
+        self.width = 720
         self.height = 720
         self.win = pygame.display.set_mode((self.width, self.height))
 
