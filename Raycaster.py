@@ -80,7 +80,7 @@ class Raycaster:
             angle = start + angle_incr * i
             x = win.get_width() / 2
             y = win.get_height() / 2
-            mag, intersection = self.raycast(self.player.pos, (math.cos(angle), math.sin(angle)))
+            mag, intersection, side = self.raycast(self.player.pos, angle)
             mag *= self.scale
 
             if intersection:
@@ -108,7 +108,7 @@ class Raycaster:
                 w = win.get_width() / self.resolution
                 x = w * i
                 h = win.get_height() / v[0]
-                y = (win.get_height() - h) / 2
+                y = (win.get_height() - h) / 2 + self.player.y
 
                 color = (128, 0, 0) if not v[2] >= 2 else (255, 0, 0)
                 pygame.draw.rect(win, color, (x, y, w+1, h))

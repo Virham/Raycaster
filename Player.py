@@ -3,18 +3,27 @@ import math
 
 
 class Player:
-    def __init__(self, pos, move_speed, sprint_speed, angle_speed, map):
+    def __init__(self, pos, move_speed, sprint_speed, angle_speed, mouse_speed, map):
         self.pos = pos
         self.angle = 0.1
 
         self.move_speed = move_speed
         self.sprint_speed = sprint_speed
         self.angle_speed = angle_speed
+        self.mouse_speed = mouse_speed
         self.map = map
+
+        self.y = 0
+        self.vel = 0
 
     @property
     def keys(self):
         return pygame.key.get_pressed()
+
+    def event_handler(self, event):
+        if event.type == pygame.MOUSEMOTION:
+            x = event.pos[0] - pygame.display.get_surface().get_width() / 2
+            self.angle += x * self.mouse_speed
 
     def get_look_direction(self):
         return math.cos(self.angle), math.sin(self.angle)
@@ -66,6 +75,21 @@ class Player:
                         return
 
         self.pos = (x, y)
+
+        self.jump(dt)
+
+    def jump(self, dt):
+        if not self.y and self.keys[pygame.K_SPACE]:
+            self.vel = 250
+
+        self.y += self.vel * dt
+        print(self.y)
+        if self.vel:
+            self.vel -= 300 * dt
+
+        if self.y < 0:
+            self.vel = 0
+            self.y = 0
 
     def rotate(self, dt):
         dir = self.keys[pygame.K_RIGHT] - self.keys[pygame.K_LEFT]

@@ -14,11 +14,13 @@ class Main:
         self.win = pygame.display.set_mode((self.width, self.height))
 
         self.map = self.generate_map(100, 100 )
-        self.player = Player((-3.2, 2.1), 3, 5, 4, self.map)
+        self.player = Player((-3.2, 2.1), 3, 5, 4, 0.007, self.map)
 
-        self.racaster = Raycaster(self.map, self.player, 100, 60, 10)
+        self.racaster = Raycaster(self.map, self.player, 100, 80, 10)
 
         self.time = time.time()
+
+        pygame.mouse.set_visible(False)
 
     def generate_map(self, width, height):
         map = []
@@ -31,6 +33,7 @@ class Main:
         return map
 
     def draw(self):
+        # self.racaster.draw(self.win)
         self.racaster.draw_persepctive(self.win)
 
         pygame.display.update()
@@ -50,8 +53,13 @@ class Main:
                 if event.type == pygame.QUIT:
                     return
 
+            self.player.event_handler(event)
+
             self.update(self.get_dt())
             self.draw()
+
+            pygame.mouse.set_pos(self.width / 2, self.height / 2)
+
 
 
 Main().loop()
