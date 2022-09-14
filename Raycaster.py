@@ -104,7 +104,7 @@ class Raycaster:
                 normalized = v[0] / self.render_distance
                 w = win.get_width() / self.resolution
                 x = w * i
-                h = (1 - normalized) * 500
+                h = win.get_height() / v[0]
                 y = (win.get_height() - h) / 2
 
                 color = (1 - normalized) * 255
