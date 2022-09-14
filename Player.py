@@ -3,11 +3,12 @@ import math
 
 
 class Player:
-    def __init__(self, pos, move_speed, angle_speed, map):
+    def __init__(self, pos, move_speed, sprint_speed, angle_speed, map):
         self.pos = pos
-        self.angle = 0
+        self.angle = 0.1
 
         self.move_speed = move_speed
+        self.sprint_speed = sprint_speed
         self.angle_speed = angle_speed
         self.map = map
 
@@ -30,6 +31,8 @@ class Player:
         return 0
 
     def move(self, dt):
+        move_speed = self.move_speed if not self.keys[pygame.K_LSHIFT] else self.sprint_speed
+
         right_axis = self.keys[pygame.K_d] - self.keys[pygame.K_a]
         forward_axis = self.keys[pygame.K_w]- self.keys[pygame.K_s]
 
@@ -39,7 +42,7 @@ class Player:
         forward = (forward_dir[0] * forward_axis, forward_dir[1] * forward_axis)
         right = (right_dir[0] * right_axis, right_dir[1] * right_axis)
 
-        vel = ((forward[0] + right[0]) * dt * self.move_speed, (forward[1] + right[1]) * dt * self.move_speed)
+        vel = ((forward[0] + right[0]) * dt * move_speed, (forward[1] + right[1]) * dt * move_speed)
         if right_axis and forward_axis:
             mag = math.sqrt(2)
             vel = (vel[0] / mag, vel[1] / mag)

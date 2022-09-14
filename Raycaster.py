@@ -44,6 +44,7 @@ class Raycaster:
         sc_x = math.sqrt(1 + (direction[1] / direction[0]) ** 2) if direction[0] else 1
         sc_y = math.sqrt(1 + (direction[0] / direction[1]) ** 2) if direction[1] else 1
 
+        side = 0
         intersection = pos
         length = 0
         block = (math.floor(pos[0]), math.floor(pos[1]))
@@ -55,19 +56,21 @@ class Raycaster:
                 intersection = (round(intersection[0] + x * self.sign(direction[0])), intersection[1] + x * sc_x * direction[1])
                 length += x * sc_x
                 block = (block[0] + self.sign(direction[0]), block[1])
+                side = (self.sign(direction[0]) + 1) // 2
             else:
                 intersection = (intersection[0] + y * sc_y * direction[0], round(intersection[1] + y * self.sign(direction[1])))
                 length += y * sc_y
                 block = (block[0], block[1] + self.sign(direction[1]))
+                side = (self.sign(direction[1]) + 1) // 2 + 2
 
             if length > self.render_distance:
-                return length, False
+                return length, False, side
 
             if block in self.map:
                 better_len = length * math.cos(self.player.angle - angle)
-                return better_len, intersection
+                return better_len, intersection, side
 
-        return length, False
+        return length, False, side
 
     def draw_raycast(self, win):
         angle_incr = self.fov / self.resolution
@@ -107,5 +110,5 @@ class Raycaster:
                 h = win.get_height() / v[0]
                 y = (win.get_height() - h) / 2
 
-                color = (1 - normalized) * 255
-                pygame.draw.rect(win, (color, color, color), (x, y, w+1, h))
+                color = (128, 0, 0) if not v[2] >= 2 else (255, 0, 0)
+                pygame.draw.rect(win, color, (x, y, w+1, h))

@@ -14,7 +14,7 @@ class Main:
         self.win = pygame.display.set_mode((self.width, self.height))
 
         self.map = self.generate_map(100, 100 )
-        self.player = Player((-3.2, 2.1), 3, 4, self.map)
+        self.player = Player((-3.2, 2.1), 3, 5, 4, self.map)
 
         self.racaster = Raycaster(self.map, self.player, 100, 60, 10)
 
