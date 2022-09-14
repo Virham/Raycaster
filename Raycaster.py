@@ -20,9 +20,7 @@ class Raycaster:
 
         for i in range(self.resolution):
             angle = start + angle_incr * i
-            x = math.cos(angle)
-            y = math.sin(angle)
-            results[i] = self.raycast(self.player.pos, (x, y))
+            results[i] = self.raycast(self.player.pos, angle)
 
         return results
 
@@ -40,7 +38,9 @@ class Raycaster:
             return 1 - pos % 1
         return pos % 1
 
-    def raycast(self, pos, direction):
+    def raycast(self, pos, angle):
+        direction = (math.cos(angle), math.sin(angle))
+
         sc_x = math.sqrt(1 + (direction[1] / direction[0]) ** 2) if direction[0] else 1
         sc_y = math.sqrt(1 + (direction[0] / direction[1]) ** 2) if direction[1] else 1
 
@@ -64,7 +64,8 @@ class Raycaster:
                 return length, False
 
             if block in self.map:
-                return length, intersection
+                better_len = length * math.cos(self.player.angle - angle )
+                return better_len, intersection
 
         return length, False
 
@@ -103,8 +104,8 @@ class Raycaster:
                 normalized = v[0] / self.render_distance
                 w = win.get_width() / self.resolution
                 x = w * i
-                h = (1 - normalized) * win.get_height()
+                h = (1 - normalized) * 500
                 y = (win.get_height() - h) / 2
 
                 color = (1 - normalized) * 255
-                pygame.draw.rect(win, (color, color, color), (x, y, w, h))
+                pygame.draw.rect(win, (color, color, color), (x, y, w+1, h))
