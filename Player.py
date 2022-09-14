@@ -80,10 +80,9 @@ class Player:
 
     def jump(self, dt):
         if not self.y and self.keys[pygame.K_SPACE]:
-            self.vel = 250
+            self.vel = 125
 
         self.y += self.vel * dt
-        print(self.y)
         if self.vel:
             self.vel -= 300 * dt
 
