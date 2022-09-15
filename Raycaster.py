@@ -102,7 +102,7 @@ class Raycaster:
         win.fill((0, 0, 0))
         res = self.cast_rays()
 
-        height =  win.get_height() / 2 + self.player.y
+        height = win.get_height() / 2 + self.player.y + self.player.pitch * 0.5
 
         pygame.draw.rect(win, (64, 128, 255), (0, 0, win.get_width(), height))
         pygame.draw.rect(win, (229, 229, 190), (0, height, win.get_width(), win.get_height() - height))
@@ -113,7 +113,7 @@ class Raycaster:
                 w = win.get_width() / self.resolution
                 x = w * i
                 h = win.get_height() / v[0]
-                y = (win.get_height() - h) / 2 + self.player.y / normalized
+                y = (win.get_height() - h) / 2 + self.player.y / normalized + self.player.pitch * normalized
 
                 sat = (1 - normalized) * 0.45 + 0.55
                 color = (128, 0, 0) if not v[2] >= 2 else (255, 0, 0)
