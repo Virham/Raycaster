@@ -16,7 +16,7 @@ class Main:
         self.map = self.generate_map(100, 100 )
         self.player = Player((-3.2, 2.1), 3, 5, 4, 0.007, self.map)
 
-        self.racaster = Raycaster(self.map, self.player, 100, 80, 10)
+        self.racaster = Raycaster(self.map, self.player, 100, 80, 15)
 
         self.time = time.time()
 

@@ -102,6 +102,11 @@ class Raycaster:
         win.fill((0, 0, 0))
         res = self.cast_rays()
 
+        height =  win.get_height() / 2 + self.player.y
+
+        pygame.draw.rect(win, (64, 128, 255), (0, 0, win.get_width(), height))
+        pygame.draw.rect(win, (229, 229, 190), (0, height, win.get_width(), win.get_height() - height))
+
         for i, v in enumerate(res):
             if v[1]:
                 normalized = v[0] / self.render_distance
