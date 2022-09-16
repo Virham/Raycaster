@@ -3,7 +3,8 @@ import pygame
 
 
 class Raycaster:
-    def __init__(self, map, player, resolution, fov, render_distance):
+    def __init__(self, main, map, player, resolution, fov, render_distance):
+        self.main = main
         self.map = map
         self.player = player
 
@@ -63,11 +64,8 @@ class Raycaster:
                 block = (block[0], block[1] + self.sign(direction[1]))
                 side = (self.sign(direction[1]) + 1) // 2 + 2
 
-            if length > self.render_distance:
-                return length, False, side
-
             if block in self.map:
-                better_len = length * math.cos(self.player.angle - angle)
+                better_len = length * math.cos(self.player.angle - angle) if self.main.perspective else length
                 return better_len, intersection, side
 
         return length, False, side
@@ -102,18 +100,18 @@ class Raycaster:
         win.fill((0, 0, 0))
         res = self.cast_rays()
 
-        height = win.get_height() / 2 + self.player.y + self.player.pitch * 0.5
+        height = win.get_height() / 2 + self.player.y
 
         pygame.draw.rect(win, (64, 128, 255), (0, 0, win.get_width(), height))
         pygame.draw.rect(win, (229, 229, 190), (0, height, win.get_width(), win.get_height() - height))
 
         for i, v in enumerate(res):
             if v[1]:
-                normalized = v[0] / self.render_distance
+                normalized = min(1, v[0] / self.render_distance)
                 w = win.get_width() / self.resolution
                 x = w * i
                 h = win.get_height() / v[0]
-                y = (win.get_height() - h) / 2 + self.player.y / normalized + self.player.pitch * normalized
+                y = (win.get_height() - h) / 2 + self.player.y / normalized
 
                 sat = (1 - normalized) * 0.45 + 0.55
                 color = (128, 0, 0) if not v[2] >= 2 else (255, 0, 0)

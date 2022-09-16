@@ -16,11 +16,13 @@ class Main:
         self.map = self.generate_map(100, 100 )
         self.player = Player((-3.2, 2.1), 3, 5, 4, 0.007, self.map)
 
-        self.racaster = Raycaster(self.map, self.player, 100, 80, 15)
+        self.racaster = Raycaster(self, self.map, self.player, 100, 60, 15)
 
         self.time = time.time()
 
         pygame.mouse.set_visible(False)
+
+        self.perspective = True
 
     def generate_map(self, width, height):
         map = []
@@ -33,8 +35,7 @@ class Main:
         return map
 
     def draw(self):
-        # self.racaster.draw(self.win)
-        self.racaster.draw_persepctive(self.win)
+        self.racaster.draw_persepctive(self.win) if self.perspective else self.racaster.draw(self.win)
 
         pygame.display.update()
 
@@ -52,6 +53,9 @@ class Main:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_t:
+                        self.perspective = not self.perspective
 
             self.player.event_handler(event)
 

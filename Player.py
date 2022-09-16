@@ -15,7 +15,6 @@ class Player:
 
         self.y = 0
         self.vel = 0
-        self.pitch = 0
 
     @property
     def keys(self):
@@ -26,8 +25,6 @@ class Player:
             x = event.pos[0] - pygame.display.get_surface().get_width() / 2
             y = event.pos[1] - pygame.display.get_surface().get_height() / 2
             self.angle += x * self.mouse_speed
-
-            self.pitch -= y
 
     def get_look_direction(self):
         return math.cos(self.angle), math.sin(self.angle)
